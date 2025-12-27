@@ -7,7 +7,6 @@ class Brain:
     def __init__(self):
         self.memory = Memory()
 
-        # ✅ CORRETO: acessar pelo .data
         self.emotions = EmotionalEngine(
             self.memory.data.get("emotions", {})
         )
@@ -15,7 +14,7 @@ class Brain:
         self.llm = LLM()
         self.filter = AntiGenericFilter()
 
-    def think(self, user_text: str) -> str:
+    def responder(self, user_text: str) -> str:
         mood_context = self.emotions.context()
         memory_context = self.memory.context()
 
