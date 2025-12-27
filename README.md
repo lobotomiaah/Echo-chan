@@ -1,6 +1,6 @@
 # 🤖 Echo-sama
 
-Echo-sama é um bot desenvolvido em **Python**, estruturado de forma modular para facilitar a criação, manutenção e expansão de funcionalidades.  
+Echo-sama é uma "IA" desenvolvido em **Python**, estruturado de forma modular para entretenimento(ela é uma tsundere).  
 
 O projeto separa claramente:
 - a lógica central do bot  
