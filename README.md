@@ -1,4 +1,4 @@
-# 🤖 Echo-sama
+# 🤖 Echo-chan
 
 Echo-sama é uma "IA" desenvolvido em **Python**, estruturado de forma modular para entretenimento(ela é uma tsundere).  
 
