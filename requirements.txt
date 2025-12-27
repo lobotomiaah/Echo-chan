@@ -1,7 +1,6 @@
 ollama
 faster-whisper
 TTS==0.22.0  # Coqui TTS com XTTS
-torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118  # Se tiver GPU NVIDIA
 sounddevice
 numpy
 keyboard
