@@ -1,22 +1,35 @@
-from piper.voice import PiperVoice
+# tts.py - Versão 100% estável (configura channels e sample_rate manualmente)
+
 import wave
 import pygame
+import os
+from piper.voice import PiperVoice
 
-# Mude pro nome da sua voz baixada
-MODEL_PATH = "audio/referencia_tsundere.wav"  # Ou a que você escolheu
+MODEL_PATH = "voice/en_US-amy-medium.onnx"  # Voz fofa Amy!
 
 voice = PiperVoice.load(MODEL_PATH)
 
 def falar(texto):
-    wav_bytes, sample_rate = voice.synthesize(texto)
-    with wave.open("output/output.wav", "wb") as wf:
-        wf.setnchannels(1)
-        wf.setsampwidth(2)
-        wf.setframerate(sample_rate)
-        wf.writeframes(wav_bytes)
+    print("Echo-sama falando:", texto)
     
+    # Cria pasta output se não existir
+    if not os.path.exists("output"):
+        os.makedirs("output")
+    
+    output_path = "output/output.wav"
+    
+    with wave.open(output_path, "wb") as wav_file:
+        # Configura manualmente (Piper usa sempre mono 16-bit)
+        wav_file.setnchannels(1)                # 1 canal (mono)
+        wav_file.setsampwidth(2)                # 16-bit (2 bytes)
+        wav_file.setframerate(voice.config.sample_rate)  # Sample rate do modelo (ex: 22050 pra Amy medium)
+        
+        # Agora Piper escreve os dados de áudio
+        voice.synthesize(texto, wav_file)
+    
+    # Toca o WAV gerado
     pygame.mixer.init()
-    pygame.mixer.music.load("output/output.wav")
+    pygame.mixer.music.load(output_path)
     pygame.mixer.music.play()
     while pygame.mixer.music.get_busy():
         pygame.time.wait(100)
