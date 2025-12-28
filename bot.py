@@ -3,7 +3,7 @@ mineflayer = require('mineflayer')
 pathfinder = require('mineflayer-pathfinder')
 
 RANGE_GOAL = 1
-BOT_USERNAME = 'Echo-sama'
+BOT_USERNAME = 'Echo-chan'
 
 bot = mineflayer.createBot({
   'host': '127.0.0.1',
