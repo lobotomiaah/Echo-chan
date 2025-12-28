@@ -12,11 +12,11 @@ from llm import load_memory, gerar_resposta
 from tts import falar
 from config import WHISPER_MODEL
 
-# Configs
+# ===== CONFIGS DA VOZ =====
 SAMPLERATE = 16000
 BLOCKSIZE = 512
 
-# Carrega Silero VAD (leve e rápido)
+# Carrega Silero VAD
 model_vad, utils = torch.hub.load(repo_or_dir='snakers4/silero-vad',
                                   model='silero_vad',
                                   force_reload=False,
@@ -36,14 +36,15 @@ speech_buffer = []
 recording = False
 last_speech_time = time.time()
 
-# Ajustes pra menos ruído falso e resposta rápida
+# Ajustes
 SPEECH_THRESHOLD = 0.75
 MIN_SPEECH_DURATION = 0.5
 MIN_SILENCE_DURATION = 0.8
 
 print("Echo-sama tsundere pronta! 💢❤️")
-print("Eu estou escutando o tempo todo agora~ Fale claro quando quiser (eu detecto automaticamente)!")
+print("Eu estou escutando o tempo todo agora~ Fale claro quando quiser!")
 print("Diga algo como 'Oi Echo-sama' pra testar... (Ctrl+C pra parar)")
+print("Nyaa~ Estou aqui só pra você, baka senpai... 💢❤️")
 
 def audio_callback(indata, frames, time_info, status):
     audio_queue.put(indata.copy())
@@ -82,9 +83,8 @@ def process_speech():
     duration = len(full_audio) / SAMPLERATE
     
     if duration < MIN_SPEECH_DURATION:
-        return  # Ignora barulhinho curto
+        return
     
-    # Cria pasta audio se não existir
     if not os.path.exists("audio"):
         os.makedirs("audio")
     
@@ -106,7 +106,7 @@ def process_speech():
     print("Echo-sama:", resposta)
     falar(resposta)
 
-# Inicia tudo
+# Inicia a escuta de voz
 threading.Thread(target=vad_processor, daemon=True).start()
 
 with sd.InputStream(samplerate=SAMPLERATE, channels=1, dtype='float32',
