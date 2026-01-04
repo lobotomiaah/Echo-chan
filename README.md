@@ -38,4 +38,4 @@ Clone o repositório:
 
 ```bash
 git clone https://github.com/lobotomiaah/Echo-sama.git
-cd Echo-sama
+cd Echo-chan
