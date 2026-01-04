@@ -1,35 +1,40 @@
-# tts.py - Versão 100% estável (configura channels e sample_rate manualmente)
-
-import wave
+import requests
 import pygame
+import time
 import os
-from piper.voice import PiperVoice
 
-MODEL_PATH = "voice/en_US-amy-medium.onnx"  # Voz fofa Amy!
+# Config API (porta padrão do GPT-SoVITS API)
+API_URL = "http://127.0.0.1:9872/inference"  # Mude se sua porta for diferente
 
-voice = PiperVoice.load(MODEL_PATH)
+# Path do seu arquivo de voz clonada de Meisho Doto (o .wav de referência)
+REFERENCE_AUDIO = "voice/meisho_doto_reference.wav"  # Coloque seu .wav aqui
 
 def falar(texto):
     print("Echo-sama falando:", texto)
     
-    # Cria pasta output se não existir
-    if not os.path.exists("output"):
-        os.makedirs("output")
+    payload = {
+        "text": texto,
+        "text_lang": "zh",  # Chinês pra emoção anime, funciona com PT
+        "ref_audio_path": REFERENCE_AUDIO,
+        "prompt_lang": "ja",  # Japonês pra tom tsundere
+        "top_k": 5,
+        "top_p": 1.0,
+        "temperature": 1.0,
+        "speed": 1.0
+    }
     
-    output_path = "output/output.wav"
-    
-    with wave.open(output_path, "wb") as wav_file:
-        # Configura manualmente (Piper usa sempre mono 16-bit)
-        wav_file.setnchannels(1)                # 1 canal (mono)
-        wav_file.setsampwidth(2)                # 16-bit (2 bytes)
-        wav_file.setframerate(voice.config.sample_rate)  # Sample rate do modelo (ex: 22050 pra Amy medium)
-        
-        # Agora Piper escreve os dados de áudio
-        voice.synthesize(texto, wav_file)
-    
-    # Toca o WAV gerado
-    pygame.mixer.init()
-    pygame.mixer.music.load(output_path)
-    pygame.mixer.music.play()
-    while pygame.mixer.music.get_busy():
-        pygame.time.wait(100)
+    try:
+        response = requests.post(API_URL, json=payload)
+        if response.status_code == 200:
+            with open("output/output.wav", "wb") as f:
+                f.write(response.content)
+            
+            pygame.mixer.init()
+            pygame.mixer.music.load("output/output.wav")
+            pygame.mixer.music.play()
+            while pygame.mixer.music.get_busy():
+                time.sleep(0.1)
+        else:
+            print("Erro na API:", response.text)
+    except Exception as e:
+        print("Erro ao conectar API:", e)
